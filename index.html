@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loovie - Conectá a través del cine</title>
-    <meta name="description" content="Conectá con personas para ir al cine. Primero la charla, después la imagen. La app de citas para amantes del cine." />
-    
+    <meta name="description"
+        content="Conectá con personas para ir al cine. Primero la charla, después la imagen. La app de citas para amantes del cine." />
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,7 +61,7 @@
             color: #fff;
             overflow-x: hidden;
         }
-        
+
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
@@ -83,6 +85,7 @@
         }
     </style>
 </head>
+
 <body class="antialiased min-h-screen flex flex-col items-center justify-center relative">
 
     <!-- Background Effects -->
@@ -91,7 +94,8 @@
 
     <!-- Navigation (Simple) -->
     <nav class="absolute top-0 w-full p-6 flex justify-between items-center z-40 max-w-6xl mx-auto">
-        <div class="text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">
+        <div
+            class="text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">
             LOOVIE
         </div>
         <a href="https://app.loovieapp.com" class="text-sm text-gray-400 hover:text-white transition-colors">
@@ -101,58 +105,67 @@
 
     <!-- Main Content -->
     <main class="z-10 text-center px-4 max-w-4xl mx-auto relative">
-        
+
         <!-- Decorative Elements -->
-        <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-64 h-64 bg-red-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse"></div>
+        <div
+            class="absolute -top-32 left-1/2 -translate-x-1/2 w-64 h-64 bg-red-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse">
+        </div>
 
         <!-- Hero Text -->
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 opacity-0 animate-slide-up" style="animation-delay: 0.1s;">
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 opacity-0 animate-slide-up"
+            style="animation-delay: 0.1s;">
             Conectá a través <br class="hidden md:block" />
             <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-600">del cine</span>
         </h1>
 
-        <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed opacity-0 animate-slide-up" style="animation-delay: 0.3s;">
+        <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed opacity-0 animate-slide-up"
+            style="animation-delay: 0.3s;">
             Primero la charla, después la imagen. <br>
             La app donde tus películas favoritas dicen más que tus fotos.
         </p>
 
         <!-- CTA Button -->
         <div class="opacity-0 animate-slide-up" style="animation-delay: 0.5s;">
-            <a href="https://app.loovieapp.com" 
-               class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-red font-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(229,9,20,0.5)] focus:outline-none ring-offset-2 focus:ring-2 ring-red-500">
-                <span class="absolute inset-0 w-full h-full rounded-full opacity-0 group-hover:opacity-20 bg-gradient-to-b from-white to-transparent"></span>
+            <a href="https://app.loovieapp.com"
+                class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-red font-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(229,9,20,0.5)] focus:outline-none ring-offset-2 focus:ring-2 ring-red-500">
+                <span
+                    class="absolute inset-0 w-full h-full rounded-full opacity-0 group-hover:opacity-20 bg-gradient-to-b from-white to-transparent"></span>
                 <span>Entrar a la App</span>
-                
-                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+
+                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6">
+                    </path>
                 </svg>
             </a>
-            
+
             <p class="mt-6 text-sm text-gray-500">
                 Disponible en Web • Próximamente en iOS & Android
             </p>
         </div>
 
-        <!-- Floating Cards Decoration -->
-        <div class="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 hidden lg:block animate-float" style="animation-delay: -2s;">
-            <div class="glass-panel p-4 rounded-xl rotate-[-6deg] w-48 text-left">
-                <div class="h-2 w-12 bg-red-500 rounded mb-2"></div>
-                <div class="h-2 w-full bg-white/10 rounded mb-1"></div>
-                <div class="h-2 w-2/3 bg-white/10 rounded"></div>
-            </div>
-        </div>
-
-        <div class="absolute top-1/2 right-0 translate-x-full -translate-y-1/2 hidden lg:block animate-float" style="animation-delay: -4s;">
-            <div class="glass-panel p-4 rounded-xl rotate-[6deg] w-48 text-left">
-                <div class="flex gap-2 mb-2">
-                    <span class="w-8 h-8 rounded-full bg-white/20"></span>
-                    <span class="w-8 h-8 rounded-full bg-white/20"></span>
-                </div>
-                <div class="h-2 w-full bg-white/10 rounded"></div>
-            </div>
-        </div>
-
     </main>
+
+    <!-- Floating Cards Decoration (Fixed to Viewport) -->
+    <div class="fixed top-1/2 left-12 -translate-y-1/2 hidden xl:block animate-float pointer-events-none z-0"
+        style="animation-delay: -2s;">
+        <div class="glass-panel p-4 rounded-xl rotate-[-6deg] w-48 text-left">
+            <div class="h-2 w-12 bg-red-500 rounded mb-2"></div>
+            <div class="h-2 w-full bg-white/10 rounded mb-1"></div>
+            <div class="h-2 w-2/3 bg-white/10 rounded"></div>
+        </div>
+    </div>
+
+    <div class="fixed top-1/2 right-12 -translate-y-1/2 hidden xl:block animate-float pointer-events-none z-0"
+        style="animation-delay: -4s;">
+        <div class="glass-panel p-4 rounded-xl rotate-[6deg] w-48 text-left">
+            <div class="flex gap-2 mb-2">
+                <span class="w-8 h-8 rounded-full bg-white/20"></span>
+                <span class="w-8 h-8 rounded-full bg-white/20"></span>
+            </div>
+            <div class="h-2 w-full bg-white/10 rounded"></div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="absolute bottom-6 w-full text-center text-xs text-gray-600">
@@ -160,4 +173,5 @@
     </footer>
 
 </body>
+
 </html>
