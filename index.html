@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loovie - Conectá a través del cine</title>
+    <meta name="description" content="Conectá con personas para ir al cine. Primero la charla, después la imagen. La app de citas para amantes del cine." />
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            red: '#E50914',
+                            dark: '#000000',
+                            glass: 'rgba(255, 255, 255, 0.1)',
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        glow: {
+                            '0%, 100%': { boxShadow: '0 0 20px rgba(229, 9, 20, 0.4)' },
+                            '50%': { boxShadow: '0 0 40px rgba(229, 9, 20, 0.7)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bg-gradient-radial {
+            background: radial-gradient(circle at center, rgba(229, 9, 20, 0.2) 0%, transparent 70%);
+        }
+
+        .cinema-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center justify-center relative">
+
+    <!-- Background Effects -->
+    <div class="fixed inset-0 bg-gradient-radial pointer-events-none"></div>
+    <div class="cinema-grain"></div>
+
+    <!-- Navigation (Simple) -->
+    <nav class="absolute top-0 w-full p-6 flex justify-between items-center z-40 max-w-6xl mx-auto">
+        <div class="text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">
+            LOOVIE
+        </div>
+        <a href="https://app.loovieapp.com" class="text-sm text-gray-400 hover:text-white transition-colors">
+            Ya tengo cuenta
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="z-10 text-center px-4 max-w-4xl mx-auto relative">
+        
+        <!-- Decorative Elements -->
+        <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-64 h-64 bg-red-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse"></div>
+
+        <!-- Hero Text -->
+        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 opacity-0 animate-slide-up" style="animation-delay: 0.1s;">
+            Conectá a través <br class="hidden md:block" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-600">del cine</span>
+        </h1>
+
+        <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed opacity-0 animate-slide-up" style="animation-delay: 0.3s;">
+            Primero la charla, después la imagen. <br>
+            La app donde tus películas favoritas dicen más que tus fotos.
+        </p>
+
+        <!-- CTA Button -->
+        <div class="opacity-0 animate-slide-up" style="animation-delay: 0.5s;">
+            <a href="https://app.loovieapp.com" 
+               class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-red font-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(229,9,20,0.5)] focus:outline-none ring-offset-2 focus:ring-2 ring-red-500">
+                <span class="absolute inset-0 w-full h-full rounded-full opacity-0 group-hover:opacity-20 bg-gradient-to-b from-white to-transparent"></span>
+                <span>Entrar a la App</span>
+                
+                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
+            
+            <p class="mt-6 text-sm text-gray-500">
+                Disponible en Web • Próximamente en iOS & Android
+            </p>
+        </div>
+
+        <!-- Floating Cards Decoration -->
+        <div class="absolute top-1/2 left-0 -translate-x-full -translate-y-1/2 hidden lg:block animate-float" style="animation-delay: -2s;">
+            <div class="glass-panel p-4 rounded-xl rotate-[-6deg] w-48 text-left">
+                <div class="h-2 w-12 bg-red-500 rounded mb-2"></div>
+                <div class="h-2 w-full bg-white/10 rounded mb-1"></div>
+                <div class="h-2 w-2/3 bg-white/10 rounded"></div>
+            </div>
+        </div>
+
+        <div class="absolute top-1/2 right-0 translate-x-full -translate-y-1/2 hidden lg:block animate-float" style="animation-delay: -4s;">
+            <div class="glass-panel p-4 rounded-xl rotate-[6deg] w-48 text-left">
+                <div class="flex gap-2 mb-2">
+                    <span class="w-8 h-8 rounded-full bg-white/20"></span>
+                    <span class="w-8 h-8 rounded-full bg-white/20"></span>
+                </div>
+                <div class="h-2 w-full bg-white/10 rounded"></div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="absolute bottom-6 w-full text-center text-xs text-gray-600">
+        &copy; 2026 Loovie. Todos los derechos reservados.
+    </footer>
+
+</body>
+</html>
