@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Loovie - Conectá a través del cine</title>
     <meta name="description"
-        content="Conectá con personas para ir al cine. Primero la charla, después la imagen. La app de citas para amantes del cine." />
+        content="¿No tenés con quién ir al cine? Loovie conecta personas que comparten tu pasión por el cine. Encontrá con quién ir a ver la próxima peli." />
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,7 +14,8 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- Custom Config -->
     <script>
@@ -27,14 +28,16 @@
                     colors: {
                         brand: {
                             red: '#E50914',
-                            dark: '#000000',
-                            glass: 'rgba(255, 255, 255, 0.1)',
+                            dark: '#0a0a0a',
+                            glass: 'rgba(255, 255, 255, 0.05)',
                         }
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
                         'glow': 'glow 3s ease-in-out infinite',
                         'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
@@ -46,8 +49,16 @@
                             '50%': { boxShadow: '0 0 40px rgba(229, 9, 20, 0.7)' },
                         },
                         slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.7' },
                         }
                     }
                 }
@@ -56,6 +67,10 @@
     </script>
 
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: #000;
             color: #fff;
@@ -64,12 +79,20 @@
 
         .glass-panel {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-panel-strong {
+            background: rgba(229, 9, 20, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(229, 9, 20, 0.2);
         }
 
         .bg-gradient-radial {
-            background: radial-gradient(circle at center, rgba(229, 9, 20, 0.2) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(229, 9, 20, 0.15) 0%, transparent 70%);
         }
 
         .cinema-grain {
@@ -80,97 +103,439 @@
             height: 100%;
             pointer-events: none;
             z-index: 50;
-            opacity: 0.05;
+            opacity: 0.04;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(229, 9, 20, 0.3), transparent);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #E50914, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .benefit-icon {
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(229, 9, 20, 0.05));
+            border: 1px solid rgba(229, 9, 20, 0.15);
+        }
+
+        /* Scroll-triggered animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .reveal-delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .reveal-delay-4 {
+            transition-delay: 0.4s;
         }
     </style>
 </head>
 
-<body class="antialiased min-h-screen flex flex-col items-center justify-center relative">
+<body class="antialiased relative">
 
     <!-- Background Effects -->
     <div class="fixed inset-0 bg-gradient-radial pointer-events-none"></div>
     <div class="cinema-grain"></div>
 
-    <!-- Navigation (Simple) -->
-    <nav class="absolute top-0 w-full p-6 flex justify-between items-center z-40 max-w-6xl mx-auto">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full p-5 md:p-6 flex justify-between items-center z-40 max-w-6xl mx-auto left-0 right-0">
         <div
             class="text-2xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400">
             LOOVIE
         </div>
-        <a href="https://app.loovieapp.com" class="text-sm text-gray-400 hover:text-white transition-colors">
+        <a href="https://app.loovieapp.com"
+            class="text-sm text-gray-400 hover:text-white transition-colors border border-white/10 rounded-full px-4 py-2 hover:border-white/30">
             Ya tengo cuenta
         </a>
     </nav>
 
-    <!-- Main Content -->
-    <main class="z-10 text-center px-4 max-w-4xl mx-auto relative">
+    <!-- ============================================ -->
+    <!-- SECTION 1: HERO                              -->
+    <!-- ============================================ -->
+    <section class="min-h-screen flex flex-col items-center justify-center relative px-4 pt-20 pb-16">
 
-        <!-- Decorative Elements -->
+        <!-- Decorative glow -->
         <div
-            class="absolute -top-32 left-1/2 -translate-x-1/2 w-64 h-64 bg-red-600/20 rounded-full blur-[100px] pointer-events-none animate-pulse">
+            class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-red-600/15 rounded-full blur-[120px] pointer-events-none animate-pulse-soft">
         </div>
 
-        <!-- Hero Text -->
-        <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 opacity-0 animate-slide-up"
-            style="animation-delay: 0.1s;">
-            Conectá a través <br class="hidden md:block" />
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-600">del cine</span>
-        </h1>
+        <div class="z-10 text-center max-w-3xl mx-auto">
+            <!-- Problem Statement -->
+            <p class="text-red-400/80 text-sm md:text-base font-medium tracking-widest uppercase mb-6 opacity-0 animate-slide-up"
+                style="animation-delay: 0s;">
+                ¿No tenés con quién ir al cine?
+            </p>
 
-        <p class="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed opacity-0 animate-slide-up"
-            style="animation-delay: 0.3s;">
-            Primero la charla, después la imagen. <br>
-            La app donde tus películas favoritas dicen más que tus fotos.
-        </p>
+            <!-- Hero Headline -->
+            <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight mb-6 opacity-0 animate-slide-up leading-[1.1]"
+                style="animation-delay: 0.15s;">
+                Conectá a través <br class="hidden sm:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">del
+                    cine</span>
+            </h1>
 
-        <!-- CTA Button -->
-        <div class="opacity-0 animate-slide-up" style="animation-delay: 0.5s;">
-            <a href="https://app.loovieapp.com"
-                class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-red font-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(229,9,20,0.5)] focus:outline-none ring-offset-2 focus:ring-2 ring-red-500">
-                <span
-                    class="absolute inset-0 w-full h-full rounded-full opacity-0 group-hover:opacity-20 bg-gradient-to-b from-white to-transparent"></span>
-                <span>Entrar a la App</span>
+            <!-- Subheadline -->
+            <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-xl mx-auto leading-relaxed opacity-0 animate-slide-up"
+                style="animation-delay: 0.3s;">
+                Loovie conecta personas que comparten tu pasión por el cine.
+                Encontrá con quién ir a ver la próxima peli.
+            </p>
 
-                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none"
-                    stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6">
-                    </path>
-                </svg>
-            </a>
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-4 items-center justify-center opacity-0 animate-slide-up"
+                style="animation-delay: 0.45s;">
+                <!-- Primary CTA -->
+                <a href="https://app.loovieapp.com"
+                    class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-red rounded-full hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(229,9,20,0.5)] focus:outline-none ring-offset-2 focus:ring-2 ring-red-500 text-base">
+                    <span
+                        class="absolute inset-0 w-full h-full rounded-full opacity-0 group-hover:opacity-20 bg-gradient-to-b from-white to-transparent"></span>
+                    <span>Entrar a la App</span>
+                    <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
 
-            <p class="mt-6 text-sm text-gray-500">
-                Disponible en Web • Próximamente en iOS & Android
+                <!-- Secondary CTA -->
+                <a href="#fundadores"
+                    class="inline-flex items-center justify-center px-6 py-4 font-semibold text-gray-300 transition-all duration-200 border border-white/15 rounded-full hover:border-white/30 hover:text-white text-sm">
+                    Conocé el Programa Fundadores
+                </a>
+            </div>
+
+            <p class="mt-8 text-xs text-gray-500 opacity-0 animate-slide-up" style="animation-delay: 0.6s;">
+                Disponible en Web · Próximamente en iOS & Android
             </p>
         </div>
 
-    </main>
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 opacity-0 animate-slide-up"
+            style="animation-delay: 0.8s;">
+            <div class="w-6 h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-1.5">
+                <div class="w-1.5 h-2.5 bg-white/40 rounded-full animate-bounce"></div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Floating Cards Decoration (Fixed to Viewport) -->
-    <div class="fixed top-1/2 left-12 -translate-y-1/2 hidden xl:block animate-float pointer-events-none z-0"
+    <!-- Divider -->
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!-- SECTION 2: PROBLEM → SOLUTION                -->
+    <!-- ============================================ -->
+    <section class="py-20 md:py-28 px-4">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 reveal">
+                El cine es mejor <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">acompañado</span>
+            </h2>
+            <p class="text-gray-400 text-center max-w-2xl mx-auto mb-16 text-lg reveal reveal-delay-1">
+                Loovie resuelve lo que todos sentimos alguna vez
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Pain 1 -->
+                <div
+                    class="glass-panel rounded-2xl p-8 text-center reveal reveal-delay-1 hover:border-white/20 transition-colors">
+                    <div class="text-4xl mb-4">🎬</div>
+                    <h3 class="text-white font-semibold text-lg mb-3">"Quiero ir al cine pero no tengo con quién"</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Matcheá con personas que quieren ver la misma peli
+                        que vos, en tu zona.</p>
+                </div>
+                <!-- Pain 2 -->
+                <div
+                    class="glass-panel rounded-2xl p-8 text-center reveal reveal-delay-2 hover:border-white/20 transition-colors">
+                    <div class="text-4xl mb-4">💬</div>
+                    <h3 class="text-white font-semibold text-lg mb-3">"Las apps de citas no me representan"</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Acá lo importante son tus gustos cinematográficos,
+                        no tus fotos.</p>
+                </div>
+                <!-- Pain 3 -->
+                <div
+                    class="glass-panel rounded-2xl p-8 text-center reveal reveal-delay-3 hover:border-white/20 transition-colors">
+                    <div class="text-4xl mb-4">👥</div>
+                    <h3 class="text-white font-semibold text-lg mb-3">"Salir solo/a al cine no es lo mismo"</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Armá grupo o salí en pareja. Vos elegís cómo
+                        disfrutar la experiencia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!-- SECTION 3: HOW IT WORKS                      -->
+    <!-- ============================================ -->
+    <section class="py-20 md:py-28 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 reveal">
+                Cómo <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">funciona</span>
+            </h2>
+            <p class="text-gray-400 text-center max-w-xl mx-auto mb-16 text-lg reveal reveal-delay-1">
+                Tres pasos para tu próxima salida al cine
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center reveal reveal-delay-1">
+                    <div class="step-number text-6xl md:text-7xl font-extrabold mb-4">1</div>
+                    <h3 class="text-white font-bold text-lg mb-2">Elegí una peli</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Explorá la cartelera actualizada y elegí qué querés
+                        ver esta semana.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="text-center reveal reveal-delay-2">
+                    <div class="step-number text-6xl md:text-7xl font-extrabold mb-4">2</div>
+                    <h3 class="text-white font-bold text-lg mb-2">Encontrá tu match</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Te conectamos con personas que quieren ver lo mismo
+                        y están cerca.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="text-center reveal reveal-delay-3">
+                    <div class="step-number text-6xl md:text-7xl font-extrabold mb-4">3</div>
+                    <h3 class="text-white font-bold text-lg mb-2">Viví la experiencia</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Charlá, coordiná y disfrutá la salida. Primero la
+                        charla, después la imagen.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!-- SECTION 4: BENEFITS                          -->
+    <!-- ============================================ -->
+    <section class="py-20 md:py-28 px-4">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 reveal">
+                ¿Por qué <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">Loovie</span>?
+            </h2>
+            <p class="text-gray-400 text-center max-w-xl mx-auto mb-16 text-lg reveal reveal-delay-1">
+                No es solo una app, es una experiencia
+            </p>
+
+            <div class="grid sm:grid-cols-2 gap-6">
+                <!-- Benefit 1 -->
+                <div
+                    class="glass-panel rounded-2xl p-7 flex gap-5 items-start reveal reveal-delay-1 hover:border-white/20 transition-colors">
+                    <div class="benefit-icon rounded-xl p-3 shrink-0">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Primero la charla</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Conocé a alguien por sus gustos
+                            cinematográficos antes que por sus fotos. Acá el cine habla por vos.</p>
+                    </div>
+                </div>
+                <!-- Benefit 2 -->
+                <div
+                    class="glass-panel rounded-2xl p-7 flex gap-5 items-start reveal reveal-delay-2 hover:border-white/20 transition-colors">
+                    <div class="benefit-icon rounded-xl p-3 shrink-0">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Seguridad real</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Verificación de identidad, modo fantasma y
+                            control total sobre tu visibilidad y tus datos.</p>
+                    </div>
+                </div>
+                <!-- Benefit 3 -->
+                <div
+                    class="glass-panel rounded-2xl p-7 flex gap-5 items-start reveal reveal-delay-3 hover:border-white/20 transition-colors">
+                    <div class="benefit-icon rounded-xl p-3 shrink-0">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Vos elegís</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">¿Cita? ¿Grupo de amigos? ¿Solo alguien para
+                            charlar después de la función? Vos decidís.</p>
+                    </div>
+                </div>
+                <!-- Benefit 4 -->
+                <div
+                    class="glass-panel rounded-2xl p-7 flex gap-5 items-start reveal reveal-delay-4 hover:border-white/20 transition-colors">
+                    <div class="benefit-icon rounded-xl p-3 shrink-0">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-white font-semibold mb-1">Tu zona</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">Encontrá personas cerca de tu cine favorito.
+                            Sin distancias imposibles.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!-- SECTION 5: FOUNDERS PROGRAM                  -->
+    <!-- ============================================ -->
+    <section id="fundadores" class="py-20 md:py-28 px-4">
+        <div class="max-w-3xl mx-auto">
+            <div class="glass-panel-strong rounded-3xl p-8 md:p-12 text-center reveal">
+                <!-- Badge -->
+                <div
+                    class="inline-flex items-center gap-2 bg-red-500/10 border border-red-500/20 rounded-full px-4 py-1.5 mb-6">
+                    <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    <span class="text-red-400 text-xs font-semibold tracking-wider uppercase">Lugares limitados</span>
+                </div>
+
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">
+                    Ayudá a construir <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-500">Loovie</span>
+                </h2>
+
+                <p class="text-gray-300 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+                    Los primeros usuarios que apoyen el desarrollo reciben beneficios exclusivos de por vida:
+                </p>
+
+                <!-- Benefits Grid -->
+                <div class="grid grid-cols-2 gap-4 max-w-md mx-auto mb-10">
+                    <div class="glass-panel rounded-xl p-4 text-center">
+                        <div class="text-2xl mb-1">⭐</div>
+                        <span class="text-white text-sm font-medium">Premium de por vida</span>
+                    </div>
+                    <div class="glass-panel rounded-xl p-4 text-center">
+                        <div class="text-2xl mb-1">🏅</div>
+                        <span class="text-white text-sm font-medium">Insignia exclusiva</span>
+                    </div>
+                    <div class="glass-panel rounded-xl p-4 text-center">
+                        <div class="text-2xl mb-1">🚀</div>
+                        <span class="text-white text-sm font-medium">Acceso anticipado</span>
+                    </div>
+                    <div class="glass-panel rounded-xl p-4 text-center">
+                        <div class="text-2xl mb-1">💬</div>
+                        <span class="text-white text-sm font-medium">Línea directa con el equipo</span>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <a href="https://app.loovieapp.com"
+                    class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-brand-red rounded-full hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(229,9,20,0.5)] focus:outline-none ring-offset-2 focus:ring-2 ring-red-500 text-base animate-glow">
+                    <span
+                        class="absolute inset-0 w-full h-full rounded-full opacity-0 group-hover:opacity-20 bg-gradient-to-b from-white to-transparent"></span>
+                    <span>Quiero ser parte</span>
+                    <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SECTION 6: FOOTER                            -->
+    <!-- ============================================ -->
+    <footer class="border-t border-white/5 py-12 px-4">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <div
+                    class="text-xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-400 mb-1">
+                    LOOVIE
+                </div>
+                <p class="text-gray-500 text-sm">Conectá a través del cine</p>
+            </div>
+
+            <div class="flex gap-6 text-sm text-gray-400">
+                <a href="https://app.loovieapp.com" class="hover:text-white transition-colors">App</a>
+                <a href="https://instagram.com/loovieapp" target="_blank"
+                    class="hover:text-white transition-colors">Instagram</a>
+                <a href="mailto:hola@loovieapp.com" class="hover:text-white transition-colors">Contacto</a>
+            </div>
+
+            <p class="text-xs text-gray-600">&copy; 2026 Loovie. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Floating Cards Decoration (Desktop only) -->
+    <div class="fixed top-1/4 left-8 hidden 2xl:block animate-float pointer-events-none z-0 opacity-50"
         style="animation-delay: -2s;">
-        <div class="glass-panel p-4 rounded-xl rotate-[-6deg] w-48 text-left">
-            <div class="h-2 w-12 bg-red-500 rounded mb-2"></div>
+        <div class="glass-panel p-4 rounded-xl rotate-[-6deg] w-44 text-left">
+            <div class="h-2 w-10 bg-red-500/60 rounded mb-2"></div>
             <div class="h-2 w-full bg-white/10 rounded mb-1"></div>
             <div class="h-2 w-2/3 bg-white/10 rounded"></div>
         </div>
     </div>
 
-    <div class="fixed top-1/2 right-12 -translate-y-1/2 hidden xl:block animate-float pointer-events-none z-0"
+    <div class="fixed top-1/3 right-8 hidden 2xl:block animate-float pointer-events-none z-0 opacity-50"
         style="animation-delay: -4s;">
-        <div class="glass-panel p-4 rounded-xl rotate-[6deg] w-48 text-left">
+        <div class="glass-panel p-4 rounded-xl rotate-[6deg] w-44 text-left">
             <div class="flex gap-2 mb-2">
-                <span class="w-8 h-8 rounded-full bg-white/20"></span>
-                <span class="w-8 h-8 rounded-full bg-white/20"></span>
+                <span class="w-7 h-7 rounded-full bg-white/15"></span>
+                <span class="w-7 h-7 rounded-full bg-white/15"></span>
             </div>
             <div class="h-2 w-full bg-white/10 rounded"></div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="absolute bottom-6 w-full text-center text-xs text-gray-600">
-        &copy; 2026 Loovie. Todos los derechos reservados.
-    </footer>
+    <!-- Scroll Animation Script -->
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 
 </body>
 
