@@ -5,6 +5,7 @@ import Hero from '../components/Hero';
 import HowItWorks from '../components/HowItWorks';
 import Founders from '../components/Founders';
 import Industry from '../components/Industry';
+import PlayStoreBanner from '../components/PlayStoreBanner';
 import Footer from '../components/Footer';
 
 const Home = () => {
@@ -22,6 +23,7 @@ const Home = () => {
             <HowItWorks />
             <Founders referralCode={referralCode} />
             <Industry />
+            <PlayStoreBanner />
             <Footer />
         </motion.main>
     );

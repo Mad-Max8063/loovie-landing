@@ -18,6 +18,7 @@ export default {
             animation: {
                 'float': 'float 6s ease-in-out infinite',
                 'pulse-soft': 'pulseSoft 3s ease-in-out infinite',
+                'shimmer': 'shimmer 3s ease-in-out infinite',
             },
             keyframes: {
                 float: {
@@ -27,6 +28,11 @@ export default {
                 pulseSoft: {
                     '0%, 100%': { opacity: '1' },
                     '50%': { opacity: '0.8' },
+                },
+                shimmer: {
+                    '0%': { transform: 'translateX(-100%)' },
+                    '50%': { transform: 'translateX(100%)' },
+                    '100%': { transform: 'translateX(100%)' },
                 }
             }
         },
